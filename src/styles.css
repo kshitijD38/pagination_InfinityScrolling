@@ -4,6 +4,11 @@
   padding: 10px;
   color: teal;
   background-color: lightgray;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 100px;
 }
 
 a {

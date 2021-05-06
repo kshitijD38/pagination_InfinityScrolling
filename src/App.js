@@ -3,7 +3,7 @@ import "./styles.css";
 
 export default function App() {
   const [pageNumber, setPageNumber] = useState(1);
-  const [limit] = useState(10);
+  const [limit, setLimit] = useState(40);
   // const api = `https://jsonplaceholder.typicode.com/posts?_limit=${limit}&_page=${pageNumber}`;
   const api = `https://jsonplaceholder.typicode.com/todos`;
   const [dataArray, setDataArray] = useState([]);
@@ -27,7 +27,7 @@ export default function App() {
     fetchData();
 
     // return () => setDataArray([]);
-  }, [pageNumber, limit, api]);
+  }, [pageNumber, api]);
 
   const pageNumberArray = new Array(Math.ceil(pageLength / limit))
     .fill(1)
@@ -42,6 +42,18 @@ export default function App() {
     setPageNumber(pageNumber + 1);
   };
 
+  // scrollHeight = clientHeight + scrollTop
+  window.addEventListener("scroll", () => {
+    const {
+      documentElement: { clientHeight, scrollHeight, scrollTop } = {}
+    } = document;
+    // const { clientHeight, scrollHeight, scrollTop } = document.documentElement;
+
+    if (clientHeight + scrollTop >= scrollHeight - 10) {
+      setLimit((limit) => (limit += 5));
+    }
+  });
+
   return (
     <div className="app">
       <h1 style={{ color: "black" }}>Pagination / Infinite Scrolling</h1>
@@ -50,15 +62,17 @@ export default function App() {
           <li key={data.id}>{data.title}</li>
         ))}
       </ul>
-      <button disabled={pageNumber === 1} onClick={handlePrev}>
-        Prev
-      </button>
-      <button
-        disabled={pageNumber === Math.ceil(pageLength / limit)}
-        onClick={handleNext}
-      >
-        Next
-      </button>
+      <div>
+        <button disabled={pageNumber === 1} onClick={handlePrev}>
+          Prev
+        </button>{" "}
+        <button
+          disabled={pageNumber === Math.ceil(pageLength / limit)}
+          onClick={handleNext}
+        >
+          Next
+        </button>
+      </div>
       <div>
         {pageNumberArray.map((ele, index) => (
           <button
